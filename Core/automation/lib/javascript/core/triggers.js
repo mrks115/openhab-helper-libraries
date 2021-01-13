@@ -1,8 +1,8 @@
 /**
  * Functions for creating Triggers
- * 
+ *
  * Copyright (c) 2019 Contributors to the openHAB Scripters project
- * 
+ *
  * @author Helmut Lehmeyer - initial contribution
  */
 'use strict';
@@ -16,7 +16,7 @@ scriptExtension.importPreset("RuleFactories");
 // Examles:
 // see: org.eclipse.smarthome.automation.sample.extension.java.internal.WelcomeHomeRulesProvider.createLightsRule()
 
-if(ModuleBuilder == undefined)var ModuleBuilder = Java.type("org.eclipse.smarthome.automation.core.util.ModuleBuilder");
+if(ModuleBuilder == undefined)var ModuleBuilder = Java.type("org.openhab.core.automation.util.ModuleBuilder");
 
 //Handlers -> Used Strings for IDs now, so these classes not needed
 ///if(ChannelEventTriggerHandler   == undefined)var ChannelEventTriggerHandler     = Java.type("org.openhab.core.automation.internal.module.handler.ChannelEventTriggerHandler");
@@ -42,19 +42,19 @@ if(Trigger == undefined)var Trigger = Java.type("org.eclipse.smarthome.automatio
 
 var _StartupTriggerHandlerFactory = new TriggerHandlerFactory(){
 	get: function(trigger){
-		logWarn(" -#### #### #### #### #### get trigger "+__LINE__, trigger); 
+		logWarn(" -#### #### #### #### #### get trigger "+__LINE__, trigger);
 		//return _StartupTriggerHandlerFactory.handler(trigger);
 		return  new TriggerHandler(){
 			setRuleEngineCallback: function(rule_engine_callback){
 				logWarn(" -#### TriggerHandler setRuleEngineCallback "+__LINE__, " setRuleEngineCallback ");
 				rule_engine_callback.triggered(trigger, {});
-			}, 
+			},
 			dispose: function(){
 				logWarn(" -#### TriggerHandler dispose "+__LINE__, " dispose ");
 			}
 		};
 	},
-	ungetHandler: function( module, ruleUID, handler){ 
+	ungetHandler: function( module, ruleUID, handler){
 		logWarn(" -#### ungetHandler "+__LINE__, module);
 		logWarn(" -#### ungetHandler "+__LINE__, ruleUID);
 		logWarn(" -#### ungetHandler "+__LINE__, handler);
@@ -66,14 +66,14 @@ var _StartupTriggerHandlerFactory = new TriggerHandlerFactory(){
 var STARTUP_MODULE_ID = "jsr223.StartupTrigger";
 
 automationManager.addTriggerType(new TriggerType(
-    STARTUP_MODULE_ID, 
+    STARTUP_MODULE_ID,
 	[],
-    "the rule is activated", 
+    "the rule is activated",
     "Triggers when a rule is activated the first time",
-    new HashSet(), 
-	Visibility.VISIBLE, 
+    new HashSet(),
+	Visibility.VISIBLE,
 	[]));
-	
+
 automationManager.addTriggerHandler(STARTUP_MODULE_ID, _StartupTriggerHandlerFactory);
 */
 var StartupTrigger = function(triggerName){
@@ -97,7 +97,7 @@ var ItemStateChangeTrigger = function(itemName, oldState, newState, triggerName)
         "oldState": oldState
     })).build();
 }
-var ChangedEventTrigger = ItemStateChangeTrigger; 
+var ChangedEventTrigger = ItemStateChangeTrigger;
 
 
 // ### UpdatedEventTrigger ###
@@ -107,7 +107,7 @@ var ItemStateUpdateTrigger = function(itemName, state, triggerName){
         "state": state
     })).build();
 }
-var UpdatedEventTrigger = ItemStateUpdateTrigger; 
+var UpdatedEventTrigger = ItemStateUpdateTrigger;
 
 
 // ### CommandEventTrigger ###
@@ -118,7 +118,7 @@ var ItemCommandTrigger = function(itemName, command, triggerName){
         "command": command
     })).build();
 }
-var CommandEventTrigger = ItemCommandTrigger; 
+var CommandEventTrigger = ItemCommandTrigger;
 
 // ### TimerTrigger ###
 //!!!!!!!! timer.GenericCronTrigger !!!!!!!!!!!!!
@@ -128,7 +128,7 @@ var GenericCronTrigger = function(expression, triggerName){
         "cronExpression": expression
     })).build();
 }
-var TimerTrigger = GenericCronTrigger; 
+var TimerTrigger = GenericCronTrigger;
 
 
 // ### stateCondition ###
@@ -139,7 +139,7 @@ var ItemStateCondition = function(itemName, state, condName){
         "state": state
     })).build();
 }
-var stateCondition = ItemStateCondition; 
+var stateCondition = ItemStateCondition;
 
 // ### GenericCompareCondition ###
 var GenericCompareCondition = function(itemName, state, operator, condName){
@@ -150,7 +150,7 @@ var GenericCompareCondition = function(itemName, state, operator, condName){
     })).build();
 }
 //compareCondition("itemName", OFF, "==", "condNameOfCompareCondition")
-var compareCondition = GenericCompareCondition; 
+var compareCondition = GenericCompareCondition;
 
 
 

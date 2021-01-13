@@ -1,8 +1,8 @@
 /**
  * Functions for creating rules
- * 
+ *
  * Copyright (c) 2019 Contributors to the openHAB Scripters project
- * 
+ *
  * @author Helmut Lehmeyer - initial contribution
  */
 'use strict';
@@ -36,7 +36,7 @@ load(OPENHAB_CONF+'/automation/lib/javascript/core/conditions.js');
 
 if(RuleBuilder == undefined)var RuleBuilder = Java.type("org.openhab.core.automation.core.util.RuleBuilder");
 
-In future better do it by org.openhab.core.automation.core.util.RuleBuilder like in 
+In future better do it by org.openhab.core.automation.core.util.RuleBuilder like in
 org.openhab.core.automation.core.dto.RuleDTOMapper Don't know
 return RuleBuilder.create(ruleDto.uid)
 				.withActions(ActionDTOMapper.mapDto(ruleDto.actions))
@@ -50,11 +50,11 @@ return RuleBuilder.create(ruleDto.uid)
 				.withName(ruleDto.name)
 				.withDescription(ruleDto.description).build();
 
-//  UNTESTED UNTESTED UNTESTED 
+//  UNTESTED UNTESTED UNTESTED
 //Simplifies spelling for rules.
 (function(context) {
 	'use strict';
-	
+
 	  context.JSRuleNew = function(obj) {
 		  //logInfo("################  JSRule Line: "+__LINE__+"  #################");
 		  //2. OR second option, to add Rules in rulefile. Is not needed.
@@ -72,9 +72,9 @@ return RuleBuilder.create(ruleDto.uid)
 		  .withDescription(obj.description ? obj.description : null)
 		  .build();
 	  };
-	
+
   })(this);
-//  UNTESTED UNTESTED UNTESTED 
+//  UNTESTED UNTESTED UNTESTED
 */
 
 
@@ -96,9 +96,9 @@ return RuleBuilder.create(ruleDto.uid)
 			var ruid = uuid.randomUUID() + "-" + obj.name.replace(/[^\w]/g, "-");
 			logInfo("################  JSRule Line: "+__LINE__+"  ################# ruid:" + ruid);
 			//var rule = new SimpleRule({ setUID: function(i) { uid = i; } })
-			var rule = new SimpleRule(){
+			var rule = new SimpleRule({
 				execute: obj.execute //DOES THIS WORK? AND IF YES, WHY? => execute is found in implemented SimpleRuleActionHandler
-			};
+			});
 			var triggers = obj.triggers ? obj.triggers : obj.getEventTrigger();
 
 			rule.setTemplateUID(ruid);
@@ -127,7 +127,7 @@ return RuleBuilder.create(ruleDto.uid)
 		return null;
 	},
 
-	//TODO like in org.openhab.core.automation.core.dto.RuleDTOMapper 
+	//TODO like in org.openhab.core.automation.core.dto.RuleDTOMapper
 	// or org.openhab.core.automation.sample.extension.java.internal.WelcomeHomeRulesProvider
 	//Missing SimpleRuleActionHandler!!
 	context.JSRuleNew = function (obj, line) {
@@ -136,7 +136,7 @@ return RuleBuilder.create(ruleDto.uid)
 		var rname =  obj.name ? obj.name.replace(/[^\w]/g, "-") : "nameless-generic";
 		var ruid = obj.uid ? obj.uid : uuid.randomUUID() + "-" + rname;
 		var triggers = obj.triggers ? obj.triggers : obj.getEventTrigger();
-		var execX = new SimpleRule(){execute: obj.execute};//Not good!!
+		var execX = new SimpleRule({execute: obj.execute});//Not good!!
 		return RuleBuilder.create(ruid)
 			.withActions(execX.getActions() ? execX.getActions() : null)
 			//.withActions(obj.execute ? [obj.execute] : null) //org.openhab.core.automation.module.script.rulesupport.shared.ScriptedAutomationManager L164
@@ -151,5 +151,5 @@ return RuleBuilder.create(ruleDto.uid)
 			.withDescription(obj.description ? obj.description : null)
 			.build();
 	}
-	
+
 }) (this);

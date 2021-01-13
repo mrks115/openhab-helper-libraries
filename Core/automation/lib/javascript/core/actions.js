@@ -13,21 +13,13 @@
         context[item.actionClass.simpleName] = item.actionClass.static;
     });
 
-    try {
-        var Exec = Java.type('org.openhab.core.model.script.actions.Exec');
-        var HTTP = Java.type('org.openhab.core.model.script.actions.HTTP');
-        var LogAction = Java.type('org.openhab.core.model.script.actions.LogAction');
-        var Ping = Java.type('org.openhab.core.model.script.actions.Ping');
-        var ScriptExecution = Java.type('org.openhab.core.model.script.actions.ScriptExecution');
-    } catch(e) {
-        var Exec = Java.type('org.eclipse.smarthome.model.script.actions.Exec');
-        var HTTP = Java.type('org.eclipse.smarthome.model.script.actions.HTTP');
-        var LogAction = Java.type('org.eclipse.smarthome.model.script.actions.LogAction');
-        var Ping = Java.type('org.eclipse.smarthome.model.script.actions.Ping');
-        var ScriptExecution = Java.type('org.eclipse.smarthome.model.script.actions.ScriptExecution');
-    }
+    var Exec = Java.type('org.openhab.core.model.script.actions.Exec');
+    var HTTP = Java.type('org.openhab.core.model.script.actions.HTTP');
+    var Log = Java.type('org.openhab.core.model.script.actions.Log');
+    var Ping = Java.type('org.openhab.core.model.script.actions.Ping');
+    var ScriptExecution = Java.type('org.openhab.core.model.script.actions.ScriptExecution');
 
-    var static_imports = [Exec, HTTP, LogAction, Ping]
+    var static_imports = [Exec, HTTP, Log, Ping]
 
     static_imports.forEach(function (item, index) {
         context[item.class.simpleName] = item.class.static;

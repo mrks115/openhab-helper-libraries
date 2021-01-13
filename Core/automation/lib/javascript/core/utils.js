@@ -1,92 +1,53 @@
 /**
  * Utility functions and variables
- * 
+ *
  * Copyright (c) 2019 Contributors to the openHAB Scripters project
- * 
+ *
  * @author Helmut Lehmeyer - initial contribution
  */
 'use strict';
 
 	var OPENHAB_CONF 			= Java.type("java.lang.System").getenv("OPENHAB_CONF");
-	var automationPath 			= OPENHAB_CONF+'/automation/';
-	var mainPath 				= automationPath + 'lib/javascript/core/';
-	//https://wiki.shibboleth.net/confluence/display/IDP30/ScriptedAttributeDefinition
-	var logger 					= Java.type("org.slf4j.LoggerFactory").getLogger("jsr223.javascript");
-	
-	try {
-		var RuleBuilder = Java.type("org.openhab.core.automation.util.RuleBuilder");
-	} catch(e) {
-		var RuleBuilder = Java.type("org.eclipse.smarthome.automation.core.util.RuleBuilder");
-	}
-	
-	try {
-		var RuleManager = Java.type("org.openhab.core.automation.RuleManager");
-	} catch(e) {
-		var RuleManager = Java.type("org.eclipse.smarthome.automation.RuleManager");
-	}
-
-	var uuid 					= Java.type("java.util.UUID");
-	var ScriptExecution 		= Java.type("org.eclipse.smarthome.model.script.actions.ScriptExecution");
-	var ScriptServiceUtil 		= Java.type("org.eclipse.smarthome.model.script.ScriptServiceUtil");
-	var ExecUtil 				= Java.type("org.eclipse.smarthome.io.net.exec.ExecUtil");
-	var HttpUtil 				= Java.type("org.eclipse.smarthome.io.net.http.HttpUtil");
-
+	var automationPath 		= OPENHAB_CONF+'/automation/';
+	var mainPath 				  = automationPath + 'lib/javascript/core/';
+	var logger 					  = Java.type("org.slf4j.LoggerFactory").getLogger("jsr223.javascript");
+  var uuid 					    = Java.type("java.util.UUID");
+  var RuleBuilder       = Java.type("org.openhab.core.automation.util.RuleBuilder");
+	var RuleManager       = Java.type("org.openhab.core.automation.RuleManager");
+  var ScriptExecution   = Java.type("org.openhab.core.model.script.actions.ScriptExecution");
+  var ScriptServiceUtil = Java.type("org.openhab.core.model.script.ScriptServiceUtil");
+  var ExecUtil 				  = Java.type("org.openhab.core.io.net.exec.ExecUtil");
+  var HttpUtil 				  = Java.type("org.openhab.core.io.net.http.HttpUtil");
 
 	//Other
-	var Modifier 				= Java.type("java.lang.reflect.Modifier");
+	var Modifier 				  = Java.type("java.lang.reflect.Modifier");
 	var InputStream				= Java.type("java.io.InputStream");
-	var IOUtils					= Java.type("org.apache.commons.io.IOUtils");
-	
+	var IOUtils					  = Java.type("org.apache.commons.io.IOUtils");
 
-    //Types
-    /* included in "default" preset
-	var UnDefType 				= Java.type("org.eclipse.smarthome.core.types.UnDefType");
-	var StringListType 			= Java.type("org.eclipse.smarthome.core.library.types.StringListType");	
-	var RawType 				= Java.type("org.eclipse.smarthome.core.library.types.RawType");
-	var RewindFastforwardType 	= Java.type("org.eclipse.smarthome.core.library.types.RewindFastforwardType");
-	var PlayPauseType 			= Java.type("org.eclipse.smarthome.core.library.types.PlayPauseType");
-	var NextPreviousType 		= Java.type("org.eclipse.smarthome.core.library.types.NextPreviousType");
-    */
-    	
 	//Time JAVA 7 joda
-	var DateTime 				= Java.type("org.joda.time.DateTime");
+	//var DateTime 				= Java.type("org.joda.time.DateTime");
 	//Time JAVA 8
 	var LocalDate 				= Java.type("java.time.LocalDate");
-	var LocalDateTime 			= Java.type("java.time.LocalDateTime");
+	var LocalDateTime 		= Java.type("java.time.LocalDateTime");
 	var FormatStyle 			= Java.type("java.time.format.FormatStyle");
-	var DateTimeFormatter 		= Java.type("java.time.format.DateTimeFormatter");//https://www.programcreek.com/java-api-examples/?class=java.time.format.DateTimeFormatter&method=ofLocalizedDateTime
+	var DateTimeFormatter = Java.type("java.time.format.DateTimeFormatter");//https://www.programcreek.com/java-api-examples/?class=java.time.format.DateTimeFormatter&method=ofLocalizedDateTime
 	var LocalTime 				= Java.type("java.time.LocalTime");
-	var Month 					= Java.type("java.time.Month");
+	var Month 					  = Java.type("java.time.Month");
 	var ZoneOffset 				= Java.type("java.time.ZoneOffset");
-	var ZoneId 					= Java.type("java.time.ZoneId");
-	var OffsetDateTime 			= Java.type("java.time.OffsetDateTime");
+	var ZoneId 					  = Java.type("java.time.ZoneId");
+	var OffsetDateTime 		= Java.type("java.time.OffsetDateTime");
 
-	var Timer = Java.type('java.util.Timer');
-	
-	//var QuartzScheduler = Java.type("org.quartz.core.QuartzScheduler");
-	
+	var Timer             = Java.type('java.util.Timer');
+
 	load( mainPath + '/PersistenceExtensions.js');
-	
+
 (function(context) {
-  'use strict';	
+  'use strict';
 	context.automationPath 	= automationPath;
 	context.mainPath 		= mainPath;
 
-    /* included in "default" preset
-	//Todo missing:
-	context.UnDefType 	= UnDefType;
-	context.OPEN 		= OpenClosedType.OPEN;
-	context.CLOSED		= OpenClosedType.CLOSED;
-	context.REWIND 		= RewindFastforwardType.REWIND;
-	context.FASTFORWARD	= RewindFastforwardType.FASTFORWARD;
-	context.PLAY 		= PlayPauseType.PLAY;
-	context.PAUSE		= PlayPauseType.PAUSE;
-	context.NEXT		= NextPreviousType.NEXT;
-    context.PREVIOUS	= NextPreviousType.PREVIOUS;
-    */
-    
 	context.uuid = uuid;
-	
+
 	context.logInfo = function(type , value) {
 		logger.info(args(arguments));
 	};
@@ -102,37 +63,37 @@
 	context.logTrace = function(type , value) {
 		logger.trace(args(arguments));
 	};
-	
-	
+
+
 	context.console  = {};
 	context.console.info = context.logInfo;
 	context.console.warn = context.logWarn;
 	context.console.debug = context.logDebug;
 	context.console.error = context.logError;
-	
+
 	context.console.log = function(value) {
 		logger.info("console.log", value);
 	};
-	
+
 	context.isUndefined = function(item) {
 		return isUndefinedState(item.state);
 	};
 	context.isUndefinedStr = function(itemStr) {
 		return itemRegistry.getItem(itemStr) ? isUndefinedState(itemRegistry.getItem(itemStr).state) : true;
 	};
-	
+
 	context.isUndefinedState = function(itemState) {
 		if(itemState.toString() == "Uninitialized" || itemState.toString() == "Undefined")return true;
 		return false;
 	};
-	
+
 	context.getItem = function(it) {
 		try {
 			//print("################## "+itemRegistry.getItem(it));
 			return (typeof it === 'string' || it instanceof String) ? itemRegistry.getItem(it) : it;
 		}catch(err) {
 			context.logError("getItem "+__LINE__, err);
-		} 
+		}
 		return null;
 	};
 	context.getItem.sendCommand = context.sendCommand;
@@ -143,12 +104,12 @@
 		}catch(err) {
 			context.logError("isUninitialized "+__LINE__, err);
 			return true;
-		} 
+		}
 		return false;
 	};
-	
+
 	//returns item if exists, if got a value and this is not set, it will be updated
-	context.updateIfUninitialized = function(it, val, getFromDB) {	
+	context.updateIfUninitialized = function(it, val, getFromDB) {
 		try {
 			var item = context.getItem(it);
 			/*
@@ -160,9 +121,9 @@
 			context.logInfo("|-|-updateIfUninitialized "+__LINE__, val == null);         //true
 			if(val){context.logInfo("|-|-updateIfUninitialized "+__LINE__, "val is defined!!!!")};
 			if(item){context.logInfo("|-|-updateIfUninitialized "+__LINE__, "item is defined!!!!")}; //item is defined!!!!
-			
+
 			if(item && item.state instanceof UnDefType){
-				if(item.type == 
+				if(item.type ==
 			}
 			*/
 			if(item == undefined || item == null){
@@ -186,7 +147,7 @@
 		}catch(err) {
 			context.logError("updateIfUninitialized "+__LINE__, err);
 			return null;
-		} 
+		}
 		return null;
 	};
 
@@ -205,7 +166,7 @@
 
 		getAction("Transformation").static.transform(type, script, value);
 	};
-	
+
 	context.postUpdate = function(item, value) {
 		try {
 			events.postUpdate(item, value);
@@ -213,7 +174,7 @@
 			context.logError("utils.js postUpdate " + __LINE__ + ". Item: '" + item + "' with value: '" + value + "' ' Error:" +  err);
 		}
 	};
-	
+
 	context.sendCommand = function(item, value) {
 		try {
 			events.sendCommand(item, value);
@@ -223,12 +184,12 @@
 	};
 
 	context.sendCommandLater = function(item, value, millis) {
-		var zfunc = function(args){ 
+		var zfunc = function(args){
 			sendCommand(""+args[0], args[1]);
 		};
 		setTimeout( zfunc, millis || 1000, [item, value]);
 	};
-	
+
 	//NOT TESTED YET: storeStates(Item...);
 	context.storeStates = function(item) {
 		events.storeStates((typeof item === 'string' || item instanceof String) ? itemRegistry.getItem(item) : item);
@@ -252,7 +213,7 @@
 		evLoops:[]
 	};
 	context.setTimeout = function(fn, millis, arg) {
-		try{ 
+		try{
 			if( isFunction(fn) ){ //use
 				var t = context.timerObject;
 				if(t.timerCount > 999) t.timerCount = 0;
@@ -261,7 +222,7 @@
 				t.evLoops[t.timerCount] = new Timer('jsEventLoop'+t.timerCount, false);
 				t.evLoops[t.timerCount].schedule(function() {
 					fn(arg);
-					try{ 
+					try{
 						//cancel and purge itself
 						if(t.evLoops[tCountLocal]){
 							t.evLoops[tCountLocal].cancel();
@@ -282,15 +243,15 @@
 
 	//round(ungerundeter Wert, Stellen nach dem Komma); round(6,66666, 2); -> 6,67
 	context.round = function( x, p) { return(Math.round(Math.pow(10, p)*x)/Math.pow(10, p));};
-	
+
 	//Joda for Java 7 and openHAB2 !!!!!!NICHT AUF LocalDateTime UMSCHALTEN!!!!!!
 	//https://github.com/JodaOrg/joda-time/issues/81
-	context.now = function() { return DateTime.now();};
-	//Java8: 
+	//context.now = function() { return DateTime.now();};
+	//Java8:
 	//context.now 				= function() { return LocalDateTime.now(); };
 	context.zoneOffset 			= function() { return OffsetDateTime.now().getOffset(); }; // +02:00
 	context.isoDateTimeString 	= function() { return context.now() + (""+context.zoneOffset()).split(":").join(""); }; // '2018-09-11T12:39:40.004+0200'
-	context.dateString 			= function(kind) { 
+	context.dateString 			= function(kind) {
 		//https://www.programcreek.com/java-api-examples/?class=java.time.format.DateTimeFormatter&method=ofLocalizedDateTime
 		//return DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT, FormatStyle.SHORT).ISO_LOCAL_DATE_TIME;
 		//var n = LocalDateTime.now();
@@ -302,7 +263,7 @@
 		if(kind == "short")return LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd.MM.yy HH:mm:ss"));
 		return LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss"));
 	};
-	
+
 	context.getObjectProperties = function(obj) {
 		for (var key in obj) {
 			if (obj.hasOwnProperty(key)) {
@@ -310,10 +271,10 @@
 			}
 		}
 	};
-	
+
 	//### getTriggeredData ###
 	context.getTriggeredData = function(input) {
-		
+
 		//https://stackoverflow.com/questions/679915/how-do-i-test-for-an-empty-javascript-object
 		//context.logInfo(typeof input);
 		//context.logInfo(typeof input === "function");
@@ -326,7 +287,7 @@
 		//context.logInfo("isEmpty: JSON.stringify(obj)="+JSON.stringify(input));
 		//context.logInfo("isEmpty: JSON.stringify(obj)="+JSON.parse(input));
 		//context.logInfo(isEmpty(input));
-		
+
 		context.logInfo("input", input);
 		var ev = input.get("event")+"";
 		context.logInfo("event",ev.split("'").join("").split("Item ").join("").split(" "));
@@ -337,7 +298,7 @@
 		}else{
 			evArr = ev.split("'").join("").split("Item ").join("").split(" "); //Item 'benqth681_switch' received command ON
 		}
-		
+
 		var d = {
 			//size: 		input.size(),
 			oldState:	input.get("oldState")+"",
@@ -347,7 +308,7 @@
 			receivedTrigger:	null,
 			itemName:	evArr[0]
 		};
-		
+
 		switch (evArr[1]) {
 			case "received":
 				d.eventType = "command";
@@ -377,10 +338,10 @@
 					d.eventType = "";
 					d.triggerType = "";
 				}
-		}		
+		}
 		return d;
-	};	
-		
+	};
+
 	//### getActions ###
 	context.getActions = function() {
 		if(actions == null){
@@ -411,7 +372,7 @@
 		}
 		return actions[str].getActionClass();
 	};
-	
+
 	//### ExecUtil ###
 	context.executeCommandLine = function(commandLine) {
 		if(commandLine == null || commandLine == "" ){
@@ -469,13 +430,13 @@
 		if(timeout == undefined ){ timeout = 5000; }
 		return HttpUtil.executeUrl(httpMethod, url, timeout);
 	};
-	//like getAction("Lewi").static.sendHttpPostRequest(posturl, header, "", timeout); 
+	//like getAction("Lewi").static.sendHttpPostRequest(posturl, header, "", timeout);
 	// NOW    => executeUrlPostWithContent(posturl, "", header, timeout);
 	// BETTER =>     executeUrlWithContent("POST", posturl, null, "", header, timeout);
 	//context.executeUrlPostWithContent = function(url, content, contentType, timeout) {
-	//	return context.executeUrlWithContent("POST", url, null, content, contentType, timeout); 
+	//	return context.executeUrlWithContent("POST", url, null, content, contentType, timeout);
 	//};
-	//executeUrl(String httpMethod, String url, Properties httpHeaders, InputStream content, String contentType, int timeout) 
+	//executeUrl(String httpMethod, String url, Properties httpHeaders, InputStream content, String contentType, int timeout)
 	context.executeUrlWithContent = function(httpMethod, url, httpHeaders, content, contentType, timeout) {
 		logInfo("httpMethod = " + httpMethod);
 		logInfo("url = " + url);
@@ -489,9 +450,9 @@
 		if(content == undefined || content == null ){ content = ""; }
 		if(contentType == undefined || contentType == null ){ contentType = ""; }
 		if(timeout == undefined || timeout == null ){ timeout = 5000; }
-		return HttpUtil.executeUrl(httpMethod, url, httpHeaders, IOUtils.toInputStream(content), contentType, timeout); 
+		return HttpUtil.executeUrl(httpMethod, url, httpHeaders, IOUtils.toInputStream(content), contentType, timeout);
 	};
-	
+
 	/** STRING FUNCTIONS **/
 	context.endTrim = function(x) {
 		return x.replace(/\s*$/,'');
@@ -511,7 +472,7 @@
 
 	/** JAVA COLLECTION TO ARRAY **/
 	context.javaCollectionToArray = function( jCollection){
-		try{ 
+		try{
 			var jsArray = [];
 			jCollection.forEach(function(key) {
 				jsArray.push(key);
@@ -521,10 +482,10 @@
 			context.logError("utils.js javaCollectionToArray " + __LINE__ + " Error:" +  err);
 		}
 		return null;
-		
+
 	}
 	context.includes = function( obj, val ){
-		try{ 
+		try{
 			for (var key in obj) {
 				if(val != undefined && val == key+"")return true;
 			};
@@ -551,7 +512,7 @@
 		}
 		return s1 + um;
 	};
-	
+
 	// Is Object empty?
 	var isEmpty = function(obj) {
 		for(var prop in obj) {
@@ -566,11 +527,11 @@
 	}
 
 	var isFunction = function(v) {
-		if (v instanceof Function) { 
+		if (v instanceof Function) {
 			return true;
 		}
 		return false
 	};
-	
-	
+
+
 })(this);

@@ -9,6 +9,8 @@ Core/automation/lib/groovy/personal/**
 Core/automation/lib/python/configuration.py
 Core/automation/jython/**
 
+.DS_Store
+
 # VSCode settings
 .vscode/
 

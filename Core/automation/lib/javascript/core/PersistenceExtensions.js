@@ -1,21 +1,21 @@
 /**
  * Functions to aid in using PersistenceExtensions
- * 
+ *
  * Copyright (c) 2019 Contributors to the openHAB Scripters project
- * 
+ *
  * @author Helmut Lehmeyer - initial contribution
  */
 'use strict';
 
-var PersistenceExtensions	= Java.type("org.eclipse.smarthome.model.persistence.extensions.PersistenceExtensions");
+var PersistenceExtensions	= Java.type("org.openhab.core.persistence.extensions.PersistenceExtensions");
 
 //Simplifies spelling for rules.
 (function(context) {
   'use strict';
-  
+
 	context.PersistenceExtensions 	= PersistenceExtensions;
 	context.pe 						= PersistenceExtensions;
-	
+
 	context.persistExt = function(type, it, serviceId) {
 		try {
 			//var item = context.getItem(it);
@@ -26,7 +26,7 @@ var PersistenceExtensions	= Java.type("org.eclipse.smarthome.model.persistence.e
 		}
 		return null;
 	};
-	
+
 	//void persist(Item item, String serviceId)
 	//void persist(Item item)
 	context.persist = function(it, serviceId) {
@@ -171,5 +171,5 @@ var PersistenceExtensions	= Java.type("org.eclipse.smarthome.model.persistence.e
 		}
 		return null;
 	};
-  
+
 })(this);
